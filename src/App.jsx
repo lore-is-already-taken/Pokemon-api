@@ -1,25 +1,39 @@
-import { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import './App.css';
-import { getAllPokemons, getPokemon } from './services/poke.api';
-import { PokeList } from './components/PokeList';
-import { PokeListItem } from './components/PokelistItem';
+import { useEffect, useState } from "react";
+import "./App.css";
+import {
+  getAllPokemons,
+  getPokemonsWithoutEvolutionChain,
+  getPokemonLastEvolution,
+} from "./services/poke.api";
+import { PokeList } from "./components/PokeList";
+import { PokeListItem } from "./components/PokelistItem";
 
 function App() {
-  const [pokemones, setPokemones] = useState([]);
-  const [pokemon, setPokemon] = useState({});
+  const [pokemons, setPokemons] = useState([]);
+  const [pokemonWithEvolution, setpokemonWithEvolution] = useState([]);
 
   useEffect(() => {
-    getAllPokemons(setPokemones);
-  });
+    const fetchPokemons = async () => {
+      const auxPokemonWithEvolution = await getPokemonLastEvolution();
+      const auxPokemons = await getAllPokemons();
+
+      setPokemons(auxPokemons);
+      setpokemonWithEvolution(auxPokemonWithEvolution);
+    };
+
+    fetchPokemons();
+  }, []);
 
   return (
     <div className="App">
       <h1>hola</h1>
+      {pokemonWithEvolution.length}
+      <br />
+      {pokemons.length}
       <div>
         <PokeList>
-          {pokemones.map((poke) => {
-            return <PokeListItem key={poke.url} text={poke.name} />;
+          {pokemonWithEvolution.map((poke, index) => {
+            return <PokeListItem key={index} url="" name={poke} />;
           })}
         </PokeList>
       </div>
