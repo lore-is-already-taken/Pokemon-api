@@ -1,24 +1,28 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { useEffect, useState } from 'react';
+import './App.css';
 import {
   getAllPokemons,
   getPokemonsWithoutEvolutionChain,
   getPokemonLastEvolution,
-} from "./services/poke.api";
-import { PokeList } from "./components/PokeList";
-import { PokeListItem } from "./components/PokelistItem";
+} from './services/poke.api';
+import { PokeList } from './components/PokeList';
+import { PokeListItem } from './components/PokelistItem';
 
 function App() {
   const [pokemons, setPokemons] = useState([]);
-  const [pokemonWithEvolution, setpokemonWithEvolution] = useState([]);
+  const [pokemonWithoutEvolution, setpokemonWithoutEvolution] = useState([]);
+  const [pokemonsLastEvolution, setPokemonsLastEvolution] = useState([]);
 
   useEffect(() => {
     const fetchPokemons = async () => {
-      const auxPokemonWithEvolution = await getPokemonLastEvolution();
+      const auxPokemonWithoutEvolution =
+        await getPokemonsWithoutEvolutionChain();
       const auxPokemons = await getAllPokemons();
+      const auxPokemonsLastEvolution = await getPokemonLastEvolution();
 
       setPokemons(auxPokemons);
-      setpokemonWithEvolution(auxPokemonWithEvolution);
+      setpokemonWithoutEvolution(auxPokemonWithoutEvolution);
+      setPokemonsLastEvolution(auxPokemonsLastEvolution);
     };
 
     fetchPokemons();
@@ -27,12 +31,13 @@ function App() {
   return (
     <div className="App">
       <h1>hola</h1>
-      {pokemonWithEvolution.length}
-      <br />
-      {pokemons.length}
-      <div>
+      <div className="resumenPokemons">
+        <h3>Pokemones sin evolucion: {pokemonWithoutEvolution.length}</h3>
+        <h3>Total de pokemones: {pokemons.length}</h3>
+      </div>
+      <div className="pokemonList">
         <PokeList>
-          {pokemonWithEvolution.map((poke, index) => {
+          {pokemonWithoutEvolution.map((poke, index) => {
             return <PokeListItem key={index} url="" name={poke} />;
           })}
         </PokeList>
