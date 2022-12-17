@@ -41,6 +41,13 @@ function App() {
             return <PokeListItem key={index} url="" name={poke} />;
           })}
         </PokeList>
+        <PokeList>
+
+          {pokemonsLastEvolution.map(poke)=>{
+            return <PokeListItem key={poke} name={poke}/>
+
+          })}
+        </PokeList>
       </div>
     </div>
   );

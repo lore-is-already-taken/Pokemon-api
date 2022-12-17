@@ -15,28 +15,24 @@ const getAllPokemons = async () => {
 };
 
 const getPokemonLastEvolution = async () => {
-  const response = await axios.get(MAIN_URL + 'evolution-chain/3/');
-  const { data } = response;
-  checkEvolveTo(data.chain);
+  let pokemonLastEvolution = [];
 
-  // let pokemonLastEvolution = [];
-
-  // const response = await axios.get(ENDPOINT_EVOLUTIONCHAIN);
-  // const { data, status } = response;
-  // if (status === 200) {
-  //   data.results.forEach(async ({ url }) => {
-  //     const r = await axios.get(url);
-  //     const { data } = r;
-  //     const firstChain = data.chain;
-  //     pokemonLastEvolution.push(checkEvolveTo(firstChain, ''));
-  //   });
-  // }
-  // return pokemonLastEvolution;
+  const response = await axios.get(ENDPOINT_EVOLUTIONCHAIN);
+  const { data, status } = response;
+  if (status === 200) {
+    data.results.forEach(async ({ url }) => {
+      const r = await axios.get(url);
+      const { data } = r;
+      const firstChain = data.chain;
+      pokemonLastEvolution.push(checkEvolveTo(firstChain, ''));
+    });
+  }
+  return pokemonLastEvolution;
 };
 
 async function checkEvolveTo(chain) {
   if (chain.hasOwnProperty('evolves_to') && chain.evolves_to.length == 0) {
-    console.log(chain.species);
+    return chain.species.name;
   } else if (chain.hasOwnProperty('evolves_to')) {
     const newChain = chain.evolves_to[0];
     checkEvolveTo(newChain);
