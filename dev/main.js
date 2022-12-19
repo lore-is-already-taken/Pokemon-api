@@ -24,13 +24,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const pokeMinWeight = await getMinWeightLastEvolution(existPokemon);
 
-  pokemonLastEvolution.forEach((element) => {
-    const div = document.createElement("div");
-    div.classList.add("card");
-    div.innerHTML = `${element}`;
-    secPokelist.appendChild(div);
-  });
-
   const h3TotalPokemones = document.createElement("h3");
   const h3PokemonLastEvolution = document.createElement("h3");
   const h3PokemonWithoutEvolution = document.createElement("h3");
@@ -43,9 +36,16 @@ window.addEventListener("DOMContentLoaded", async () => {
   pokemonCounts.appendChild(h3PokemonLastEvolution);
   pokemonCounts.appendChild(h3PokemonWithoutEvolution);
 
-  const minPokemon = pokeMinWeight[0];
   const divPokeMinWeight = document.createElement("div");
+  const minPokemon = pokeMinWeight[0];
   divPokeMinWeight.classList.add("minPokeWeightDiv");
   divPokeMinWeight.innerHTML = `<img src=${minPokemon.sprites} alt=''/> <div class="minDescriptionTag"><p>Pokemon Name: ${minPokemon.name}</p> <p>Pokemon Weight: ${minPokemon.weight}</p></div>`;
   minPokeWeight.appendChild(divPokeMinWeight);
+
+  pokemonLastEvolution.forEach((element) => {
+    const div = document.createElement("div");
+    div.classList.add("card");
+    div.innerHTML = `${element}`;
+    secPokelist.appendChild(div);
+  });
 });
