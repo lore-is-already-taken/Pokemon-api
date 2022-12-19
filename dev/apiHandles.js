@@ -43,29 +43,39 @@ async function checkEvolveTo(chain) {
     await checkEvolveTo(newChain);
   }
 }
-const getMinWeightLastEvolution = async (pokemon) => {
-  let pokeList = [];
-  let poke = {
-    id: "",
-    name: "",
-    weight: 100,
-    sprite: "",
-  };
 
-  pokemon.forEach(async (element) => {
+const crearPokemon = (data) => {
+  return {
+    id: data.id,
+    name: data.name,
+    weight: data.weight,
+    sprites: data.sprites.front_default,
+  };
+};
+
+const getMinWeightLastEvolution = async (pokemon) => {
+  let peso = 10;
+  let pokeList = [];
+
+  const pokemonForeach = async (element) => {
     const response = await axios.get(ENDPOINT_POKEMON_SEARCH + element.name);
     const { data, status } = response;
 
-    if (status === 200 && data.weight < poke.weight) {
-      poke = {
-        id: data.id,
-        name: data.name,
-        weight: data.weight,
-        sprite: data.sprites.front_default,
-      };
-      pokeList.push(poke);
+    console.log("cargando...");
+    if (status === 200 && data.weight < peso) {
+      peso = data.weight;
+      return crearPokemon(data);
     }
-  });
+  };
+
+  for (let i in pokemon) {
+    const poke = await pokemonForeach(pokemon[i]);
+    if (poke) {
+      pokeList.unshift(poke);
+    }
+  }
+  //await pokemon.forEach(pokemonForeach);
+
   return pokeList;
 };
 
@@ -78,7 +88,7 @@ const getPokemonWithoutAnyEvolution = async () => {
   const { results } = data;
 
   if (status === 200) {
-    results?.forEach(async (element) => {
+    results.forEach(async (element) => {
       const r = await axios.get(element.url);
       const hasEvolution = r.data.chain.evolves_to;
       if (hasEvolution == 0) {

@@ -10,20 +10,19 @@ window.addEventListener("DOMContentLoaded", async () => {
   const pokemonCounts = document.querySelector(".pokemonCounts");
   const minPokeWeight = document.querySelector(".minPokeWeight");
 
-  const pokemonLastEvolution = await getPokemonLastEvolution(); //solo retorna name
-  const pokemonsWithoutEvolution = await getPokemonWithoutAnyEvolution();
-  const allPokemones = await getAllPokemons(); // retorna el name, url
-
   const pokemonWithPropertys = (element) => {
     const auxElement = element.name;
     return pokemonLastEvolution.includes(auxElement);
   };
 
+  const pokemonLastEvolution = await getPokemonLastEvolution(); //solo retorna name
+  const pokemonsWithoutEvolution = await getPokemonWithoutAnyEvolution();
+  const allPokemones = await getAllPokemons(); // retorna el name, url
+  const existPokemon = await allPokemones.filter(pokemonWithPropertys);
+
   // codigo de prueba
-  const existPokemon = allPokemones.filter(pokemonWithPropertys);
 
   const pokeMinWeight = await getMinWeightLastEvolution(existPokemon);
-  console.log(pokeMinWeight);
 
   pokemonLastEvolution.forEach((element) => {
     const div = document.createElement("div");
@@ -44,12 +43,9 @@ window.addEventListener("DOMContentLoaded", async () => {
   pokemonCounts.appendChild(h3PokemonLastEvolution);
   pokemonCounts.appendChild(h3PokemonWithoutEvolution);
 
+  const minPokemon = pokeMinWeight[0];
   const divPokeMinWeight = document.createElement("div");
-  //divPokeMinWeight.innerHTML = `<img src=${pokeMinWeight.sprites}/> <p>${pokeMinWeight.name}</p>`;
-
+  divPokeMinWeight.classList.add("minPokeWeightDiv");
+  divPokeMinWeight.innerHTML = `<img src=${minPokemon.sprites} alt=''/> <div class="minDescriptionTag"><p>Pokemon Name: ${minPokemon.name}</p> <p>Pokemon Weight: ${minPokemon.weight}</p></div>`;
   minPokeWeight.appendChild(divPokeMinWeight);
 });
-//crea un elemento con clase .card con el nombre del pokemon
-
-//muestra el pokemon mas liviano
-const pokemonMasLiviano = document.createElement("p");
